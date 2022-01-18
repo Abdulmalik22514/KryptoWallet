@@ -2,14 +2,14 @@ import React from 'react';
 import {View, Text} from 'react-native';
 import {MainLayout} from '.';
 
-const Home = () => {
+const Portfolio = () => {
   return (
     <MainLayout>
       <View>
-        <Text>Home</Text>
+        <Text>Portfolio</Text>
       </View>
     </MainLayout>
   );
 };
 
-export default Home;
+export default Portfolio;
