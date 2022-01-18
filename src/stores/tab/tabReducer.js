@@ -11,6 +11,8 @@ const tabReducer = (state = initialState, action) => {
         ...state,
         isTradeModalVisible: action.payload.isVisible,
       };
+    default:
+      return state;
   }
 };
 
