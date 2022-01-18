@@ -6,7 +6,6 @@ import {Home, Portfolio, Market, Profile} from '../screens/index';
 import {COLORS, icons} from '../constants/index';
 import {TabIcon} from '../components';
 import {setTradeModalVisibility} from '../stores/tab/tabActions';
-import tabReducer from '../stores/tab/tabReducer';
 
 const Tab = createBottomTabNavigator();
 
