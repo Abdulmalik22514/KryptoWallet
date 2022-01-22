@@ -66,16 +66,6 @@ const MainLayout = ({children, isTradeModalVisible}) => {
   );
 };
 
-function mapStateToProps(state) {
-  return {
-    isTradeModalVisible: state.tabReducer.isTradeModalVisible,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {};
-}
-
 const styles = StyleSheet.create({
   dimBackground: {
     position: 'absolute',
@@ -86,5 +76,15 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.transparentBlack,
   },
 });
+
+function mapStateToProps(state) {
+  return {
+    isTradeModalVisible: state.tabReducer.isTradeModalVisible,
+  };
+}
+
+function mapDispatchToProps(dispatch) {
+  return {};
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(MainLayout);
