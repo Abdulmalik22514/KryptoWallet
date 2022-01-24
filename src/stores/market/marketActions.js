@@ -4,31 +4,23 @@ export const GET_HOLDINGS_BEGIN = 'GET_HOLDINGS_BEGIN';
 export const GET_HOLDINGS_SUCCESS = 'GET_HOLDINGS_SUCCESS';
 export const GET_HOLDINGS_FAILURE = 'GET_HOLDINGS_FAILURE';
 
-export const COIN_MARKET_BEGIN = 'COIN_MARKET_BEGIN';
-export const COIN_MARKET_SUCCESS = 'COIN_MARKET_SUCCESS';
-export const COIN_MARKET_FAILURE = 'COIN_MARKET_FAILURE';
+export const GET_COIN_MARKET_BEGIN = 'GET_COIN_MARKET_BEGIN';
+export const GET_COIN_MARKET_SUCCESS = 'GET_COIN_MARKET_SUCCESS';
+export const GET_COIN_MARKET_FAILURE = 'GET_COIN_MARKET_FAILURE';
 
-// Holding / My Holdings
+// Holdings / my holdings to
+export const getHoldingsBegin = () => ({
+  type: GET_HOLDINGS_BEGIN,
+});
 
-export const getHoldingsBegin = () => {
-  return {
-    type: GET_HOLDINGS_BEGIN,
-  };
-};
-
-export const getHoldingsSuccess = myHoldings => {
-  return {
-    type: GET_HOLDINGS_SUCCESS,
-    payload: myHoldings,
-  };
-};
-
-export const getHoldingsFailure = error => {
-  return {
-    type: GET_HOLDINGS_FAILURE,
-    payload: error,
-  };
-};
+export const getHoldingsSuccess = myHoldings => ({
+  type: GET_HOLDINGS_SUCCESS,
+  payload: {myHoldings},
+});
+export const getHoldingsFailure = error => ({
+  type: GET_HOLDINGS_FAILURE,
+  payload: {error},
+});
 
 export function getHoldings(
   holdings = [],
@@ -40,30 +32,38 @@ export function getHoldings(
   page = 1,
 ) {
   return dispatch => {
-    dispatch(getHoldingsBegin);
+    dispatch(getHoldingsBegin());
 
-    let ids = holdings.map(item => item.id).join(',');
+    let ids = holdings
+      .map(item => {
+        return item.id;
+      })
+      .join(',');
 
     let apiUrl = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=${orderBy}&per_page=${perPage}&page=${page}&sparkline=${sparkline}&price_change_percentage=${priceChangePerc}&ids=${ids}`;
+
     return axios({
       url: apiUrl,
-      method: 'GET',
+      method: `GET`,
       headers: {
         Accept: 'application/json',
       },
     })
       .then(response => {
-        console.log(response);
-        if (response.state == 200) {
-          // Massage data
-          let myHoldings = response.data.map(() => {
-            // Retrieve our current holdings -> current quantity
-            let coin = holdings.find(a => a.id == item.id);
+        if (response.status === 200) {
+          // massage data
+          let myHoldings = response.data.map(item => {
+            // console.log('price change')
+            // console.log(item.price_change_percentage_7d_in_currency)
 
-            // Price from 7 days ago
+            //    retrieve our current holdings to  get the current quantity
+            let coin = holdings.find(a => a.id === item.id);
+
+            //    price from seven days ago
             let price7d =
               item.current_price /
               (1 + item.price_change_percentage_7d_in_currency * 0.01);
+
             return {
               id: item.id,
               symbol: item.symbol,
@@ -83,61 +83,52 @@ export function getHoldings(
               },
             };
           });
+
           dispatch(getHoldingsSuccess(myHoldings));
         } else {
           dispatch(getHoldingsFailure(response.data));
         }
       })
-      .catch(error => dispatch(getHoldingsFailure(error)));
+      .catch(error => {
+        dispatch(getHoldingsFailure(error));
+      });
   };
 }
 
-// coins
+//Coin market
 
-export const getCoinMarketBegin = () => {
-  return {
-    type: COIN_MARKET_BEGIN,
-  };
-};
-
-export const getCoinMarketSuccess = coins => {
-  return {
-    type: COIN_MARKET_SUCCESS,
-    payload: coins,
-  };
-};
-
-export const getCoinMarketFailure = error => {
-  return {
-    type: COIN_MARKET_FAILURE,
-    payload: error,
-  };
-};
+export const getCoinMarketBegin = () => ({
+  type: GET_COIN_MARKET_BEGIN,
+});
+export const getCoinMarketSuccess = coins => ({
+  type: GET_COIN_MARKET_SUCCESS,
+  payload: {coins},
+});
+export const getCoinMarketFailure = error => ({
+  type: GET_COIN_MARKET_FAILURE,
+  payload: {error},
+});
 
 export function getCoinMarket(
   currency = 'usd',
-  sparkline = true,
   orderBy = 'market_cap_desc',
+  sparkline = true,
   priceChangePerc = '7d',
   perPage = 10,
   page = 1,
 ) {
   return dispatch => {
-    dispatch(getCoinMarketBegin());
-
-    let apiUrl = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=${orderBy}&per_page=${perPage}&page=${page}&sparkline=${sparkline}&price_change_percentage=${priceChangePerc}
-    `;
+    let apiUrl = `https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&order=${orderBy}&per_page=${perPage}&page=${page}&sparkline=${sparkline}&price_change_percentage=${priceChangePerc}`;
 
     return axios({
       url: apiUrl,
-      method: 'GET',
+      method: `GET`,
       headers: {
         Accept: 'application/json',
       },
     })
       .then(response => {
-        console.log(response.data);
-        if (response.state == 200) {
+        if (response.status === 200) {
           dispatch(getCoinMarketSuccess(response.data));
         } else {
           dispatch(getCoinMarketFailure(response.data));

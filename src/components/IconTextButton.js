@@ -1,6 +1,6 @@
 import React from 'react';
 import {Image, StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {COLORS, SIZES} from '../constants';
+import {COLORS, FONTS, SIZES} from '../constants';
 
 const IconTextButton = ({label, icon, onPress, containerStyle}) => {
   return (
@@ -16,7 +16,7 @@ const IconTextButton = ({label, icon, onPress, containerStyle}) => {
       }}
       onPress={onPress}>
       <Image source={icon} resizeMode="contain" style={styles.icon} />
-      <Text style={{marginLeft: SIZES.base}}>{label}</Text>
+      <Text style={{marginLeft: SIZES.base, ...FONTS.h3}}>{label}</Text>
     </TouchableOpacity>
   );
 };

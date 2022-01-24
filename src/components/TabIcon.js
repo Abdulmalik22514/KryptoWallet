@@ -16,7 +16,7 @@ const TabIcon = ({focused, icon, iconStyle, label, isTrade}) => {
             ...iconStyle,
           }}
         />
-        <Text style={{color: COLORS.white}}>{label}</Text>
+        <Text style={{...FONTS.h4, color: COLORS.white}}>{label}</Text>
       </View>
     );
   } else {
@@ -34,6 +34,7 @@ const TabIcon = ({focused, icon, iconStyle, label, isTrade}) => {
         />
         <Text
           style={{
+            ...FONTS.h4,
             color: focused ? COLORS.white : COLORS.secondary,
           }}>
           {label}
